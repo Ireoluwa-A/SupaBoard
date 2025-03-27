@@ -1,0 +1,75 @@
+#include <PololuLedStrip.h>
+
+// Define the number of LEDs in your strip
+#define NUM_LEDS 10  // Adjusted to match your strip length
+#define LED_PIN 6   // The pin your LED strip is connected to
+#define GROUP_SIZE 10 // Number of LEDs per group
+
+// Create an instance of the PololuLedStrip
+PololuLedStrip<LED_PIN> ledStrip;
+
+// Create a buffer for holding the colors (RGB values)
+rgb_color colors[NUM_LEDS];
+
+void setup() {
+  // Initialize serial communication
+  Serial.begin(9600);
+  Serial.println("Enter a group number (0-" + String(NUM_LEDS/GROUP_SIZE - 1) + "):");
+  
+  // Turn all LEDs off at startup
+  allOff();
+}
+
+void loop() {
+  // Check if data is available to read from Serial
+  if (Serial.available() > 0) {
+    // Read the incoming byte
+    int groupNum = Serial.parseInt();
+    
+    // Clear any remaining characters
+    while(Serial.available() > 0) {
+      Serial.read();
+    }
+    
+    // Validate input
+    if(groupNum >= 0 && groupNum < (NUM_LEDS / GROUP_SIZE)) {
+      // Turn all LEDs off first
+      allOff();
+      
+      // Light up the selected group with orange color
+      lightGroup(groupNum, (rgb_color){255, 165, 0}); // Orange color (RGB: 255, 165, 0)
+      
+      Serial.println("Lighting group " + String(groupNum));
+    } else {
+      Serial.println("Invalid group number. Enter a value between 0 and " + 
+                      String(NUM_LEDS/GROUP_SIZE - 1) + ":");
+    }
+    
+    // Show the updated LED colors
+    ledStrip.write(colors, NUM_LEDS);
+  }
+  
+  // Small delay to prevent excessive looping
+  delay(50);
+}
+
+// Function to turn off all LEDs
+void allOff() {
+  for(int i = 0; i < NUM_LEDS; i++) {
+    colors[i] = (rgb_color){0, 0, 0}; // Black (off)
+  }
+  ledStrip.write(colors, NUM_LEDS);
+}
+
+// Function to light up a specific group with a specified color
+void lightGroup(int groupNum, rgb_color color) {
+  int startLED = groupNum * GROUP_SIZE;
+  int endLED = startLED + GROUP_SIZE;
+  
+  // Make sure we don't try to access LEDs beyond the strip length
+  endLED = min(endLED, NUM_LEDS);
+  
+  for(int i = startLED; i < endLED; i++) {
+    colors[i] = color;
+  }
+}
