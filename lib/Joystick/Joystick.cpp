@@ -5,27 +5,41 @@ bool inDeadzone(int value) {
     return value > JOYSTICK_STABLE_VALUE - DEADZONE_RANGE && value < JOYSTICK_STABLE_VALUE + DEADZONE_RANGE;
 }
 
-Direction Joystick::getDirection() {
+JoystickState Joystick::getState() {
+    JoystickState currentState = getDirection();
+    if (currentState != _prevState) {
+        _timeSinceLastChange = millis();
+        _prevState = currentState;
+        return _prevState;
+    } else if (millis() - _timeSinceLastChange > 500) {
+        _timeSinceLastChange = millis();
+        return _prevState;
+    } else {
+        return JoystickState::Neutral;
+    }
+}
+
+JoystickState Joystick::getDirection() {
     int x = analogRead(_xPin);
     int y = analogRead(_yPin);
 
     if (inDeadzone(x) && inDeadzone(y)) {
-        return STABLE;
+        return JoystickState::Neutral;
     }
     int xDistFromCenter = abs(x - JOYSTICK_STABLE_VALUE);
     int yDistFromCenter = abs(y - JOYSTICK_STABLE_VALUE);
 
     if (xDistFromCenter > yDistFromCenter) {
         if (x > JOYSTICK_STABLE_VALUE) {
-            return RIGHT;
+            return JoystickState::Right;
         } else {
-            return LEFT;
+            return JoystickState::Left;
         }
     } else {
         if (y > JOYSTICK_STABLE_VALUE){
-            return UP;
+            return JoystickState::Up;
         } else {
-            return DOWN;
+            return JoystickState::Down;
         }
     }
 }
