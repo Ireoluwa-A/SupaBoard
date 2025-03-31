@@ -4,9 +4,11 @@
 
 
 // Define the number of LEDs in your strip
-#define NUM_LEDS 20  // Adjusted to match your strip length
 #define LED_PIN 6   // The pin your LED strip is connected to
+
 #define GROUP_SIZE 10 // Number of LEDs per group
+#define NUM_GROUPS 4 // Total number of groups
+#define NUM_LEDS (NUM_GROUPS * GROUP_SIZE) // Total number of LEDs
 
 // Create an instance of the PololuLedStrip
 PololuLedStrip<LED_PIN> ledStrip;
@@ -45,7 +47,7 @@ void loop() {
     switch (state)
     {
     case JoystickState::Up:
-        cell = min(cell + 1, 1);
+        cell = min(cell + 1, NUM_GROUPS - 1); // Ensure cell doesn't exceed the number of groups
         /* code */
         break;
     case JoystickState::Down:
