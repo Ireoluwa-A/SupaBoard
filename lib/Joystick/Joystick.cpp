@@ -7,16 +7,17 @@ bool inDeadzone(int value) {
 
 JoystickState Joystick::getState() {
     JoystickState currentState = getDirection();
-    if (currentState != _prevState) {
-        _timeSinceLastChange = millis();
-        _prevState = currentState;
-        return _prevState;
-    } else if (millis() - _timeSinceLastChange > 500) {
-        _timeSinceLastChange = millis();
-        return _prevState;
-    } else {
-        return JoystickState::Neutral;
-    }
+    return currentState;
+    // if (currentState != _prevState) {
+    //     _timeSinceLastChange = millis();
+    //     _prevState = currentState;
+    //     return _prevState;
+    // } else if (millis() - _timeSinceLastChange > 500) {
+    //     _timeSinceLastChange = millis();
+    //     return _prevState;
+    // } else {
+    //     return JoystickState::Neutral;
+    // }
 }
 
 JoystickState Joystick::getDirection() {
@@ -42,8 +43,4 @@ JoystickState Joystick::getDirection() {
             return JoystickState::Down;
         }
     }
-}
-
-bool Joystick::isButtonClicked() {
-    return digitalRead(_buttonPin) == LOW;
 }
