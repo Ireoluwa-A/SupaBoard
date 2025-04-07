@@ -1,22 +1,21 @@
-#include <PololuLedStrip.h>
+#include <FastLED.h>
 
 // Define the number of LEDs in your strip
-#define NUM_LEDS 28  // Adjusted to match your strip length
-#define LED_PIN 8   // The pin your LED strip is connected to
-#define GROUP_SIZE 28 // Number of LEDs per group
+#define NUM_LEDS 28      // Adjusted to match your strip length
+#define LED_PIN 8        // The pin your LED strip is connected to
 #define HEIGHT 10
 #define WIDTH 4
 
-// Create an instance of the PololuLedStrip
-PololuLedStrip<LED_PIN> ledStrip;
-
-// Create a buffer for holding the colors (RGB values)
-rgb_color colors[NUM_LEDS];
+// Create an array for the LEDs
+CRGB leds[NUM_LEDS];
 
 void setup() {
   // Initialize serial communication
   Serial.begin(9600);
   Serial.println("Enter 0 for underline and 1 for all LEDs");
+  
+  // Initialize the LED strip - WS2812B is common, but adjust if needed
+  FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
   
   // Turn all LEDs off at startup
   allOff();
@@ -39,15 +38,15 @@ void loop() {
       allOff();
       
       // Light up the selected group with orange color
-      lightGroup(num, (rgb_color){255, 165, 0}); // Orange color (RGB: 255, 165, 0)
+      lightGroup(num, CRGB(255, 165, 0)); // Orange color (RGB: 255, 165, 0)
       
-      Serial.println("Lighting" + String(num));
+      Serial.println("Lighting " + String(num));
     } else {
       Serial.println("Invalid number. Enter a value between 0 and 1");
     }
     
     // Show the updated LED colors
-    ledStrip.write(colors, NUM_LEDS);
+    FastLED.show();
   }
   
   // Small delay to prevent excessive looping
@@ -57,17 +56,17 @@ void loop() {
 // Function to turn off all LEDs
 void allOff() {
   for(int i = 0; i < NUM_LEDS; i++) {
-    colors[i] = (rgb_color){0, 0, 0}; // Black (off)
+    leds[i] = CRGB::Black; // Black (off)
   }
-  ledStrip.write(colors, NUM_LEDS);
+  FastLED.show();
 }
 
-
-void lightGroup(int groupNum, rgb_color color) {
-  int startLED = groupNum ? 0 : HEIGHT + WIDTH + HEIGHT;
-  int endLED = NUM_LEDS;
+void lightGroup(int groupNum, CRGB color) {
+  // if group num = all LEDS
+  int startLED = groupNum ? 0 : WIDTH;
+  int endLED = groupNum ? NUM_LEDS : WIDTH + HEIGHT;
   
   for(int i = startLED; i < endLED; i++) {
-    colors[i] = color;
+    leds[i] = color;
   }
 }
