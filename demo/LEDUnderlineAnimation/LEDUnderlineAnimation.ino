@@ -9,6 +9,9 @@
 #define FLASH_DELAY 800     // Delay for flashing animation (milliseconds)
 #define FLASH_COUNT 6       // Number of flashes
 
+// Add global brightness control (0-255)
+#define BRIGHTNESS 100      // Lower value = dimmer LEDs (max is 255)
+
 // Create an array for the LEDs
 CRGB leds[NUM_LEDS];
 
@@ -28,9 +31,13 @@ void setup() {
   Serial.println("4: Red flash underline only");
   Serial.println("6: RGB flash all LEDs");
   Serial.println("7: RGB flash underline only");
+  Serial.println("8: Set brightness (0-255)");  // New option
   
   // Initialize the LED strip - WS2812B is common, but adjust if needed
   FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
+  
+  // Set the global brightness
+  FastLED.setBrightness(BRIGHTNESS);
   
   // Turn all LEDs off at startup
   allOff();
@@ -81,8 +88,17 @@ void loop() {
         Serial.println("RGB flashing underline");
         break;
         
+      case 8:  // Set brightness (new case)
+        int brightness = Serial.parseInt();
+        brightness = constrain(brightness, 0, 255);  // Ensure it's within valid range
+        FastLED.setBrightness(brightness);
+        FastLED.show();
+        Serial.print("Brightness set to: ");
+        Serial.println(brightness);
+        break;
+        
       default:
-        Serial.println("Invalid option. Please choose 0, 1, 3, 4, 6, or 7");
+        Serial.println("Invalid option. Please choose 0, 1, 3, 4, 6, 7, or 8");
         break;
     }
   }

@@ -9,7 +9,7 @@ void setup() {
   // Initialize the display (uses default I2C address 0x70)
   display.begin(0x70);
   
-  display.setBrightness(15);
+  display.setBrightness(20);
   
   // Initialize random seed using an unconnected analog pin
   randomSeed(analogRead(0));
