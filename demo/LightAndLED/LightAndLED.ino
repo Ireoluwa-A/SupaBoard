@@ -6,8 +6,8 @@
 // LED strip configuration
 #define NUM_LEDS 32      // Total number of LEDs in the strip
 #define LED_PIN 8        // The pin your LED strip is connected to
-#define BRIGHTNESS 100   // Global brightness (0-255)
-#define DISPLAY_BRIGHTNESS 20  // Brightness for the 7-segment display
+#define BRIGHTNESS 1  // Global brightness (0-255)
+#define DISPLAY_BRIGHTNESS 5  // Brightness for the 7-segment display
 
 // Timer variables
 unsigned long timerStartTime = 0;
