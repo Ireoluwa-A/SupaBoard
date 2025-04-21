@@ -12,7 +12,7 @@ Adafruit_7segment displays[MAX_DISPLAYS];
 int numDisplays = 2;
 
 // Array of I2C addresses for each display
-const uint8_t displayAddresses[MAX_DISPLAYS] = {0x73, 0x74};
+const uint8_t displayAddresses[MAX_DISPLAYS] = {0x70, 0x71, 0x72, 0x73, 0x74};
 
 void setup() {
   // Initialize all active displays
