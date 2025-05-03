@@ -9,8 +9,8 @@
 #define NUM_GROUP 5
 #define TOTAL_LEDS 32 * NUM_GROUP   // Total LEDs in the strip
 #define ACTIVE_LEDS 32 * NUM_GROUP // Number of LEDs to actually power
-#define LED_PIN 8      // Pin connected to the LED strip
-#define BRIGHTNESS 255  // Reduced brightness level (0-255)
+#define LED_PIN 7      // Pin connected to the LED strip
+#define BRIGHTNESS 5  // Reduced brightness level (0-255)
 
 // Create the LED array for the full strip
 CRGB leds[TOTAL_LEDS];
